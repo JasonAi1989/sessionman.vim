@@ -80,6 +80,10 @@ if !exists('sessionman_save_on_exit')
 	let sessionman_save_on_exit = 1
 endif
 
+if !exists('sessionman_save_threshold')
+	let sessionman_save_threshold = 1
+endif
+
 let s:cpo_save = &cpo
 set cpo&vim
 
@@ -296,6 +300,7 @@ an 10.374 &File.S&essions.&Save				:SessionSave<CR>
 an 10.375 &File.S&essions.Save\ &As\.\.\.	:SessionSaveAs<CR>
 
 aug sessionman
+	au VimLeavePre * if sessionman_save_on_exit && sessionman_save_threshold <= len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) | call s:SaveSession() | endif
 	au VimLeavePre * if sessionman_save_on_exit && v:this_session != '' | call s:SaveSession() | endif
 aug END
 
